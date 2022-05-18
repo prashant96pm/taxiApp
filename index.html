@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script defer src="https://unpkg.com/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="./css/grid.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Taxi AplineJS App</title>
+  </head>
+
+  <body>
+    <section class="center container">
+      <div
+        x-data="{ taxiRankInfo:$persist([
+                              { route: 'Bellville', 
+                                queue: 62, 
+                                taxiTrips: 0, 
+                                fare: 15.00, 
+                                taxiFareTotal: 0, 
+                                taxiAvailable: 3 },
+
+                              { route: 'Cape Town',
+                                queue: 48, 
+                                taxiTrips: 0, 
+                                fare: 14.00, 
+                                taxiFareTotal: 0, 
+                                taxiAvailable: 3 },
+
+                              { route: 'Mitchells Plain', 
+                                queue: 48, 
+                                taxiTrips: 0, 
+                                fare: 13.00, 
+                                taxiFareTotal: 0, 
+                                taxiAvailable: 3 }])}"
+        >
+        <div class="headSecton flex">
+          <p class="taxiRank">Langa Taxi Rank</p>
+          <div class="totalIn flex">
+            <p>Balance : R</p>
+            <p
+              x-text="_.sumBy(taxiRankInfo, 
+                            function(taxi) {
+                              return taxi.taxiFareTotal
+                            })"
+            ></p>
+          </div>
+        </div>
+
+        <div class="addSection">
+          <div class="flex adding">
+            <div x-data="{ show : false }">
+              <button class="route" x-on:click="show = ! show">
+                Add New Route
+              </button>
+              <div class="pin" x-show="show">
+                <p>Route : <input class="pink" x-model="userRoute" /></p>
+                <p>Ufare : <input class="pink" x-model.number="userFare" /></p>
+                <button
+                  class="taxi"
+                  @click="taxiRankInfo.push({route : userRoute, 
+                                         queue : 0, 
+                                         taxiTrips : 0, 
+                                         fare : userFare, 
+                                         taxiFareTotal : 0, 
+                                         taxiAvailable : 3})"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="inputSections">
+          <div class="left">
+            <p>> A minimun of 15 people for a taxi to Depart.</p>
+            <br />
+            <p>> Always remember to bring cash.</p>
+            <br />
+            <p>> Mask up at all times.</p>
+          </div>
+        </div>
+
+        <div class="tableSection">
+          <table>
+            <thead>
+              <tr>
+                <th class="cursive" style="font-family: cursive">
+                  <label>Route</label>
+                </th>
+                <th class="cursive"><label>Queue</label></th>
+                <th class="cursive"><label>Fare</label></th>
+                <th class="cursive"><label>Leave</label></th>
+                <th class="cursive"><label>Total</label></th>
+                <th class="cursive"><label>Trips</label></th>
+                <th class="cursive"><label>Taxi</label></th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="taxi in taxiRankInfo">
+                <tr>
+                  <td x-text="taxi.route"></td>
+                  <td class="flex" data-label="queue">
+                    <button class="btn-invoice plus" @click="taxi.queue++">
+                      +
+                    </button>
+                    <p x-text="taxi.queue" class="count"></p>
+
+                    <template x-if="taxi.queue>0">
+                      <button class="btn-invoice plus" @click="taxi.queue--">
+                        -
+                      </button>
+                    </template>
+
+                    <template x-if="taxi.queue<0">
+                      <button
+                        class="btn-invoice plus"
+                        disabled
+                        @click="taxi.queue--"
+                      >
+                        -
+                      </button>
+                    </template>
+                  </td>
+                  <td x-text="taxi.fare.toFixed(2)"></td>
+
+                  <template x-if="taxi.queue>14">
+                    <td
+                      data-label="Leave"
+                      x-if="15>taxi.queue && taxi.taxiAvailable>1"
+                    >
+                      <button
+                        class="btn-invoice"
+                        @click="taxi.queue=taxi.queue-passengers, 
+                                       taxi.taxiTrips++, 
+                            taxi.taxiFareTotal=(taxi.fare*passengers)*taxi.taxiTrips, taxi.taxiAvailable--"
+                      >
+                        Leave
+                      </button>
+                    </td>
+                  </template>
+
+                  <template x-if="taxi.queue<15">
+                    <td data-label="Leave" x-if="14>taxi.queue">
+                      <button
+                        class="btn-invoice"
+                        disabled
+                        @click="taxi.queue=taxi.queue-passengers, 
+                                       taxi.taxiTrips++, 
+                            taxi.taxiFareTotal=(taxi.fare*passengers)*taxi.taxiTrips">
+                        Leave
+                      </button>
+                    </td>
+                  </template>
+
+                  <td
+                    x-text="taxi.taxiFareTotal.toFixed(2)"
+                    data-label="Total Taxi Fare"
+                  ></td>
+                  <td data-label="Trips" x-text="taxi.taxiTrips"></td>
+                  <td class="flex available center" data-label="taxiAvailable">
+                    <p x-text="taxi.taxiAvailable"></p>
+
+                    <button class="btn-invoice" @click="taxi.taxiAvailable++">
+                      +
+                    </button>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="footerSection">
+        <p class="headline">
+          Brought to you by Langa Taxi Association | Designed by Flex Creations
+          Pty(Ltd) | Visit www.flexcreations.co.za
+        </p>
+      </div>
+    </section>
+  </body>
+  <script>
+    let passengers = 15;
+    let queue;
+    let taxi;
+    let userFare;
+    let userRoute;
+    let taxiAvailable;
+    let taxiRankInfo;
+  </script>
+</html>
