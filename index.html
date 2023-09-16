@@ -16,21 +16,21 @@
     <section class="center container">
       <div
         x-data="{ taxiRankInfo:$persist([
-                              { route: 'Bellville', 
+                              { route: 'Basavangudi', 
                                 queue: 62, 
                                 taxiTrips: 0, 
                                 fare: 15.00, 
                                 taxiFareTotal: 0, 
                                 taxiAvailable: 3 },
 
-                              { route: 'Cape Town',
+                              { route: 'Electronic City',
                                 queue: 48, 
                                 taxiTrips: 0, 
                                 fare: 14.00, 
                                 taxiFareTotal: 0, 
                                 taxiAvailable: 3 },
 
-                              { route: 'Mitchells Plain', 
+                              { route: 'Majestic', 
                                 queue: 48, 
                                 taxiTrips: 0, 
                                 fare: 13.00, 
@@ -38,9 +38,9 @@
                                 taxiAvailable: 3 }])}"
         >
         <div class="headSecton flex">
-          <p class="taxiRank">Langa Taxi Rank</p>
+          <p class="taxiRank">Okluplex Taxi Rank</p>
           <div class="totalIn flex">
-            <p>Balance : R</p>
+            <p>Balance : &#8377</p>
             <p
               x-text="_.sumBy(taxiRankInfo, 
                             function(taxi) {
@@ -77,9 +77,9 @@
 
         <div class="inputSections">
           <div class="left">
-            <p>> A minimun of 15 people for a taxi to Depart.</p>
+            <p>> A minimun of 3 people for a taxi to Depart.</p>
             <br />
-            <p>> Always remember to bring cash.</p>
+            <p>> Always remember to bring cash, or UPI payments are also accepted.</p>
             <br />
             <p>> Mask up at all times.</p>
           </div>
@@ -178,14 +178,13 @@
 
       <div class="footerSection">
         <p class="headline">
-          Brought to you by Langa Taxi Association | Designed by Flex Creations
-          Pty(Ltd) | Visit www.flexcreations.co.za
+          Brought to you by Okluplex Taxi Association | Designed by Okluplex | Visit www.Okluplex.com
         </p>
       </div>
     </section>
   </body>
   <script>
-    let passengers = 15;
+    let passengers = 5;
     let queue;
     let taxi;
     let userFare;
